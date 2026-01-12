@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using BulkVideoDownloader.Models;
 using BulkVideoDownloader.Services;
 
@@ -16,6 +17,9 @@ public sealed class MainWindowViewModel : ObservableObject
     private readonly DownloadQueue _downloadQueue = new();
     private readonly SettingsService _settingsService = new();
     private readonly Queue<string> _logBuffer = new();
+    private readonly Queue<string> _pendingLogs = new();
+    private readonly object _logLock = new();
+    private readonly DispatcherTimer _logFlushTimer;
     private CancellationTokenSource? _cancellationTokenSource;
     private string _urlInput = string.Empty;
     private string _outputDirectory = string.Empty;
@@ -30,6 +34,12 @@ public sealed class MainWindowViewModel : ObservableObject
         AddUrlsCommand = new RelayCommand(AddUrlsFromInput, () => !string.IsNullOrWhiteSpace(UrlInput));
         StartCommand = new AsyncRelayCommand(StartAsync, CanStart);
         StopCommand = new RelayCommand(Stop, () => IsRunning);
+        _logFlushTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(250)
+        };
+        _logFlushTimer.Tick += (_, _) => FlushLogs();
+        _logFlushTimer.Start();
     }
 
     public ObservableCollection<DownloadItemViewModel> Items { get; } = new();
@@ -142,16 +152,40 @@ public sealed class MainWindowViewModel : ObservableObject
 
     public void AppendLog(string message)
     {
-        UiDispatcher.Post(() =>
+        lock (_logLock)
         {
-            _logBuffer.Enqueue(message);
+            _pendingLogs.Enqueue(message);
+            while (_pendingLogs.Count > 2000)
+            {
+                _pendingLogs.Dequeue();
+            }
+        }
+    }
+
+    private void FlushLogs()
+    {
+        List<string>? pending = null;
+        lock (_logLock)
+        {
+            if (_pendingLogs.Count == 0)
+            {
+                return;
+            }
+
+            pending = new List<string>(_pendingLogs);
+            _pendingLogs.Clear();
+        }
+
+        foreach (var entry in pending)
+        {
+            _logBuffer.Enqueue(entry);
             while (_logBuffer.Count > 500)
             {
                 _logBuffer.Dequeue();
             }
+        }
 
-            LogText = string.Join(Environment.NewLine, _logBuffer);
-        });
+        LogText = string.Join(Environment.NewLine, _logBuffer);
     }
 
     private void AddUrlsFromInput()
