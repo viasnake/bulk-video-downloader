@@ -168,11 +168,11 @@ public sealed class MainWindowViewModel : ObservableObject
             return;
         }
 
-        IsRunning = true;
+        UiDispatcher.Post(() => IsRunning = true);
         AppendLog("ダウンロードを開始しました。");
         _cancellationTokenSource = new CancellationTokenSource();
 
-        await SaveSettingsAsync().ConfigureAwait(false);
+        await SaveSettingsAsync();
 
         try
         {
@@ -192,7 +192,7 @@ public sealed class MainWindowViewModel : ObservableObject
         }
         finally
         {
-            IsRunning = false;
+            UiDispatcher.Post(() => IsRunning = false);
         }
     }
 
