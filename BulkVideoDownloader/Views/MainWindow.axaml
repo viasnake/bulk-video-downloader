@@ -1,77 +1,93 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:BulkVideoDownloader.ViewModels"
-        x:Class="BulkVideoDownloader.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        mc:Ignorable="d"
-        Title="Bulk Video Downloader"
-        Width="1100"
-        Height="720"
-        MinWidth="900"
-        MinHeight="600">
-  <Grid Margin="12" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*,280">
-    <TextBox Grid.Row="0"
-             Grid.Column="0"
-             Height="120"
-             AcceptsReturn="True"
-             TextWrapping="Wrap"
-             Watermark="URLを1行に1つ入力"
-             Text="{Binding UrlInput}" />
-
-    <StackPanel Grid.Row="0" Grid.Column="1" Spacing="8">
-      <Button Content="ファイル読込" Click="OpenUrlFile" />
-      <Button Content="リストに追加" Command="{Binding AddUrlsCommand}" />
-      <Button Content="選択削除" Command="{Binding RemoveSelectedCommand}" />
-    </StackPanel>
-
-    <DataGrid Grid.Row="1"
-              Grid.Column="0"
-              AutoGenerateColumns="False"
-              IsReadOnly="True"
-              ItemsSource="{Binding Items}"
-              SelectedItem="{Binding SelectedItem}">
-      <DataGrid.Columns>
-        <DataGridTextColumn Header="URL" Binding="{Binding Url}" Width="*" />
-        <DataGridTextColumn Header="状態" Binding="{Binding StatusText}" Width="100" />
-        <DataGridTemplateColumn Header="進捗" Width="140">
-          <DataGridTemplateColumn.CellTemplate>
-            <DataTemplate>
-              <ProgressBar Minimum="0" Maximum="100" Height="16" Value="{Binding Progress}" />
-            </DataTemplate>
-          </DataGridTemplateColumn.CellTemplate>
-        </DataGridTemplateColumn>
-        <DataGridTextColumn Header="出力" Binding="{Binding OutputFile}" Width="200" />
-        <DataGridTextColumn Header="エラー" Binding="{Binding ErrorMessage}" Width="200" />
-      </DataGrid.Columns>
-    </DataGrid>
-
-    <StackPanel Grid.Row="1" Grid.Column="1" Spacing="8">
-      <TextBlock Text="保存先" />
-      <Grid ColumnDefinitions="*,Auto">
-        <TextBox Grid.Column="0" Text="{Binding OutputDirectory}" />
-        <Button Grid.Column="1" Content="参照" Margin="6,0,0,0" Click="BrowseOutputFolder" />
-      </Grid>
-
-      <TextBlock Text="追加オプション" />
-      <TextBox Text="{Binding AdditionalOptions}" />
-
-      <TextBlock Text="並列数" />
-      <NumericUpDown Minimum="1" Maximum="10" Value="{Binding Parallelism}" />
-
-      <StackPanel Orientation="Horizontal" Spacing="8">
-        <Button Content="開始" Command="{Binding StartCommand}" />
-        <Button Content="停止" Command="{Binding StopCommand}" />
+<sukiUi:SukiWindow xmlns="https://github.com/avaloniaui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:vm="clr-namespace:BulkVideoDownloader.ViewModels"
+                   xmlns:sukiUi="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+                   x:Class="BulkVideoDownloader.Views.MainWindow"
+                   x:DataType="vm:MainWindowViewModel"
+                   mc:Ignorable="d"
+                   Title="Bulk Video Downloader"
+                   Width="1200"
+                   Height="780"
+                   MinWidth="960"
+                   MinHeight="640">
+  <Grid Margin="16" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*,320">
+    <sukiUi:GlassCard Grid.Row="0" Grid.Column="0" Margin="0,0,12,12">
+      <StackPanel Spacing="8">
+        <TextBlock Text="URL入力" FontSize="16" FontWeight="SemiBold" />
+        <TextBox Height="120"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Watermark="URLを1行に1つ入力"
+                 Text="{Binding UrlInput}" />
       </StackPanel>
-    </StackPanel>
+    </sukiUi:GlassCard>
 
-    <TextBox Grid.Row="2"
-             Grid.ColumnSpan="2"
-             Height="140"
-             AcceptsReturn="True"
-             TextWrapping="Wrap"
-             IsReadOnly="True"
-             Text="{Binding LogText}" />
+    <sukiUi:GlassCard Grid.Row="0" Grid.Column="1" Margin="0,0,0,12">
+      <StackPanel Spacing="10">
+        <TextBlock Text="操作" FontSize="16" FontWeight="SemiBold" />
+        <Button Content="ファイル読込" Click="OpenUrlFile" />
+        <Button Content="リストに追加" Command="{Binding AddUrlsCommand}" />
+        <Button Content="選択削除" Command="{Binding RemoveSelectedCommand}" />
+      </StackPanel>
+    </sukiUi:GlassCard>
+
+    <sukiUi:GlassCard Grid.Row="1" Grid.Column="0" Margin="0,0,12,12">
+      <StackPanel Spacing="8">
+        <TextBlock Text="ダウンロード一覧" FontSize="16" FontWeight="SemiBold" />
+        <DataGrid AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding Items}"
+                  SelectedItem="{Binding SelectedItem}">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="URL" Binding="{Binding Url}" Width="*" />
+            <DataGridTextColumn Header="状態" Binding="{Binding StatusText}" Width="100" />
+            <DataGridTemplateColumn Header="進捗" Width="140">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ProgressBar Minimum="0" Maximum="100" Height="16" Value="{Binding Progress}" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTextColumn Header="出力" Binding="{Binding OutputFile}" Width="200" />
+            <DataGridTextColumn Header="エラー" Binding="{Binding ErrorMessage}" Width="200" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </StackPanel>
+    </sukiUi:GlassCard>
+
+    <sukiUi:GlassCard Grid.Row="1" Grid.Column="1" Margin="0,0,0,12">
+      <StackPanel Spacing="10">
+        <TextBlock Text="設定" FontSize="16" FontWeight="SemiBold" />
+        <TextBlock Text="保存先" />
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBox Grid.Column="0" Text="{Binding OutputDirectory}" />
+          <Button Grid.Column="1" Content="参照" Margin="6,0,0,0" Click="BrowseOutputFolder" />
+        </Grid>
+
+        <TextBlock Text="追加オプション" />
+        <TextBox Text="{Binding AdditionalOptions}" />
+
+        <TextBlock Text="並列数" />
+        <NumericUpDown Minimum="1" Maximum="10" Value="{Binding Parallelism}" />
+
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Content="開始" Command="{Binding StartCommand}" />
+          <Button Content="停止" Command="{Binding StopCommand}" />
+        </StackPanel>
+      </StackPanel>
+    </sukiUi:GlassCard>
+
+    <sukiUi:GlassCard Grid.Row="2" Grid.ColumnSpan="2">
+      <StackPanel Spacing="8">
+        <TextBlock Text="ログ" FontSize="16" FontWeight="SemiBold" />
+        <TextBox Height="160"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 IsReadOnly="True"
+                 Text="{Binding LogText}" />
+      </StackPanel>
+    </sukiUi:GlassCard>
   </Grid>
-</Window>
+</sukiUi:SukiWindow>

@@ -4,10 +4,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using BulkVideoDownloader.ViewModels;
+using SukiUI.Controls;
 
 namespace BulkVideoDownloader.Views;
 
-public sealed partial class MainWindow : Window
+public sealed partial class MainWindow : SukiWindow
 {
     public MainWindow()
     {
