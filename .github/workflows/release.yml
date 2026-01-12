@@ -25,17 +25,16 @@ jobs:
             rid: osx-arm64
 
     env:
-      DOTNET_VERSION: "8.0.22"
       PROJECT: BulkVideoDownloader/BulkVideoDownloader.csproj
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: jdx/mise-action@v3
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
       - name: Publish
         shell: bash
-        run: dotnet publish $PROJECT -c Release -r ${{ matrix.rid }} --self-contained false -o "artifacts/${{ matrix.rid }}"
+        run: mise exec -- dotnet publish $PROJECT -c Release -r ${{ matrix.rid }} --self-contained false -o "artifacts/${{ matrix.rid }}"
       - name: Pack
         shell: bash
         run: tar -czf "artifacts/BulkVideoDownloader-${{ matrix.rid }}.tar.gz" -C "artifacts/${{ matrix.rid }}" .
