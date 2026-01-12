@@ -25,8 +25,19 @@ public sealed class SettingsService
             return new SettingsModel();
         }
 
-        var json = await File.ReadAllTextAsync(_settingsPath).ConfigureAwait(false);
-        return JsonSerializer.Deserialize<SettingsModel>(json) ?? new SettingsModel();
+        try
+        {
+            var json = await File.ReadAllTextAsync(_settingsPath).ConfigureAwait(false);
+            return JsonSerializer.Deserialize<SettingsModel>(json) ?? new SettingsModel();
+        }
+        catch (IOException)
+        {
+            return new SettingsModel();
+        }
+        catch (JsonException)
+        {
+            return new SettingsModel();
+        }
     }
 
     public async Task SaveAsync(SettingsModel settings)
