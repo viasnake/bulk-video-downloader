@@ -12,8 +12,9 @@
                    Height="780"
                    MinWidth="960"
                    MinHeight="640">
-  <Grid Margin="16" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*,320">
-    <sukiUi:GlassCard Grid.Row="0" Grid.Column="0" Margin="0,0,12,12">
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+    <Grid Margin="16" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*,320">
+      <sukiUi:GlassCard Grid.Row="0" Grid.Column="0" Margin="0,0,12,12">
       <StackPanel Spacing="8">
         <TextBlock Text="URL入力" FontSize="16" FontWeight="SemiBold" />
         <TextBox Height="120"
@@ -26,16 +27,18 @@
 
     <sukiUi:GlassCard Grid.Row="0" Grid.Column="1" Margin="0,0,0,12">
       <StackPanel Spacing="10">
-        <TextBlock Text="操作" FontSize="16" FontWeight="SemiBold" />
+        <TextBlock Text="取り込み" FontSize="16" FontWeight="SemiBold" />
         <Button Content="ファイル読込" Click="OpenUrlFile" />
         <Button Content="リストに追加" Command="{Binding AddUrlsCommand}" />
-        <Button Content="選択削除" Command="{Binding RemoveSelectedCommand}" />
       </StackPanel>
     </sukiUi:GlassCard>
 
     <sukiUi:GlassCard Grid.Row="1" Grid.Column="0" Margin="0,0,12,12">
       <StackPanel Spacing="8">
-        <TextBlock Text="ダウンロード一覧" FontSize="16" FontWeight="SemiBold" />
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+          <TextBlock Grid.Column="0" Text="ダウンロード一覧" FontSize="16" FontWeight="SemiBold" />
+          <Button Grid.Column="1" Content="選択削除" Command="{Binding RemoveSelectedCommand}" />
+        </Grid>
         <DataGrid AutoGenerateColumns="False"
                   IsReadOnly="True"
                   ItemsSource="{Binding Items}"
@@ -70,18 +73,19 @@
         <TextBox Text="{Binding AdditionalOptions}" />
 
         <TextBlock Text="並列数" />
-        <NumericUpDown Minimum="1" Maximum="10" Value="{Binding Parallelism}" />
-
-        <StackPanel Orientation="Horizontal" Spacing="8">
-          <Button Content="開始" Command="{Binding StartCommand}" />
-          <Button Content="停止" Command="{Binding StopCommand}" />
-        </StackPanel>
+        <NumericUpDown Minimum="1" Maximum="10" Increment="1" FormatString="0" Value="{Binding Parallelism}" />
       </StackPanel>
     </sukiUi:GlassCard>
 
     <sukiUi:GlassCard Grid.Row="2" Grid.ColumnSpan="2">
       <StackPanel Spacing="8">
-        <TextBlock Text="ログ" FontSize="16" FontWeight="SemiBold" />
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+          <TextBlock Grid.Column="0" Text="ログ" FontSize="16" FontWeight="SemiBold" />
+          <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+            <Button Content="開始" Command="{Binding StartCommand}" />
+            <Button Content="停止" Command="{Binding StopCommand}" />
+          </StackPanel>
+        </Grid>
         <TextBox Height="160"
                  AcceptsReturn="True"
                  TextWrapping="Wrap"
@@ -89,5 +93,6 @@
                  Text="{Binding LogText}" />
       </StackPanel>
     </sukiUi:GlassCard>
-  </Grid>
+    </Grid>
+  </ScrollViewer>
 </sukiUi:SukiWindow>
