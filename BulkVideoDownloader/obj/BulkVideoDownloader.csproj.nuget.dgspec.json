@@ -1,0 +1,79 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/sysadmin/ghq/github.com/viasnake/bulk-video-downloader/BulkVideoDownloader/BulkVideoDownloader.csproj": {}
+  },
+  "projects": {
+    "/home/sysadmin/ghq/github.com/viasnake/bulk-video-downloader/BulkVideoDownloader/BulkVideoDownloader.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/sysadmin/ghq/github.com/viasnake/bulk-video-downloader/BulkVideoDownloader/BulkVideoDownloader.csproj",
+        "projectName": "BulkVideoDownloader",
+        "projectPath": "/home/sysadmin/ghq/github.com/viasnake/bulk-video-downloader/BulkVideoDownloader/BulkVideoDownloader.csproj",
+        "packagesPath": "/home/sysadmin/.nuget/packages/",
+        "outputPath": "/home/sysadmin/ghq/github.com/viasnake/bulk-video-downloader/BulkVideoDownloader/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/sysadmin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Avalonia": {
+              "target": "Package",
+              "version": "[11.0.6, )"
+            },
+            "Avalonia.Controls.DataGrid": {
+              "target": "Package",
+              "version": "[11.0.6, )"
+            },
+            "Avalonia.Desktop": {
+              "target": "Package",
+              "version": "[11.0.6, )"
+            },
+            "Avalonia.Themes.Fluent": {
+              "target": "Package",
+              "version": "[11.0.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/sysadmin/.local/share/mise/installs/dotnet/8.0.100/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
