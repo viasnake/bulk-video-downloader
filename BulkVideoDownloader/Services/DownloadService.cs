@@ -50,9 +50,19 @@ public sealed class DownloadService
         process.OutputDataReceived += (_, args) => HandleOutput(args.Data);
         process.ErrorDataReceived += (_, args) => HandleOutput(args.Data);
 
-        if (!process.Start())
+        try
         {
-            UiDispatcher.Post(() => item.SetError("yt-dlp の起動に失敗しました。"));
+            if (!process.Start())
+            {
+                UiDispatcher.Post(() => item.SetError("yt-dlp の起動に失敗しました。"));
+                log("yt-dlp の起動に失敗しました。");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            UiDispatcher.Post(() => item.SetError("yt-dlp を起動できませんでした。"));
+            log($"yt-dlp 起動エラー: {ex.Message}");
             return;
         }
 

@@ -53,6 +53,11 @@ public sealed class DownloadQueue
         {
             UiDispatcher.Post(() => item.SetError("停止しました。"));
         }
+        catch (Exception ex)
+        {
+            UiDispatcher.Post(() => item.SetError("予期しないエラーが発生しました。"));
+            log($"ダウンロード中の例外: {ex.Message}");
+        }
         finally
         {
             semaphore.Release();

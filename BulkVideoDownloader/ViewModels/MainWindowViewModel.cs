@@ -186,6 +186,10 @@ public sealed class MainWindowViewModel : ObservableObject
         {
             AppendLog("ダウンロードを停止しました。");
         }
+        catch (Exception ex)
+        {
+            AppendLog($"予期しないエラー: {ex.Message}");
+        }
         finally
         {
             IsRunning = false;
