@@ -22,6 +22,7 @@ public sealed class MainWindowViewModel : ObservableObject
     private readonly DispatcherTimer _logFlushTimer;
     private CancellationTokenSource? _cancellationTokenSource;
     private string _urlInput = string.Empty;
+    private DownloadItemViewModel? _selectedItem;
     private string _outputDirectory = string.Empty;
     private string _additionalOptions = string.Empty;
     private int _parallelism = 1;
@@ -32,6 +33,7 @@ public sealed class MainWindowViewModel : ObservableObject
     {
         Items.CollectionChanged += OnItemsChanged;
         AddUrlsCommand = new RelayCommand(AddUrlsFromInput, () => !string.IsNullOrWhiteSpace(UrlInput));
+        RemoveSelectedCommand = new RelayCommand(RemoveSelected, CanRemoveSelected);
         StartCommand = new AsyncRelayCommand(StartAsync, CanStart);
         StopCommand = new RelayCommand(Stop, () => IsRunning);
         _logFlushTimer = new DispatcherTimer
@@ -46,6 +48,8 @@ public sealed class MainWindowViewModel : ObservableObject
 
     public RelayCommand AddUrlsCommand { get; }
 
+    public RelayCommand RemoveSelectedCommand { get; }
+
     public AsyncRelayCommand StartCommand { get; }
 
     public RelayCommand StopCommand { get; }
@@ -58,6 +62,18 @@ public sealed class MainWindowViewModel : ObservableObject
             if (SetProperty(ref _urlInput, value))
             {
                 AddUrlsCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    public DownloadItemViewModel? SelectedItem
+    {
+        get => _selectedItem;
+        set
+        {
+            if (SetProperty(ref _selectedItem, value))
+            {
+                RemoveSelectedCommand.RaiseCanExecuteChanged();
             }
         }
     }
@@ -97,9 +113,10 @@ public sealed class MainWindowViewModel : ObservableObject
         {
             if (SetProperty(ref _isRunning, value))
             {
-                StartCommand.RaiseCanExecuteChanged();
-                StopCommand.RaiseCanExecuteChanged();
-            }
+        StartCommand.RaiseCanExecuteChanged();
+        RemoveSelectedCommand.RaiseCanExecuteChanged();
+    }
+
         }
     }
 
@@ -136,6 +153,23 @@ public sealed class MainWindowViewModel : ObservableObject
 
         AddUrlsCommand.RaiseCanExecuteChanged();
         StartCommand.RaiseCanExecuteChanged();
+    }
+
+    private void RemoveSelected()
+    {
+        if (SelectedItem is null)
+        {
+            return;
+        }
+
+        Items.Remove(SelectedItem);
+        SelectedItem = null;
+        StartCommand.RaiseCanExecuteChanged();
+    }
+
+    private bool CanRemoveSelected()
+    {
+        return !IsRunning && SelectedItem is not null;
     }
 
     public async Task AddUrlsFromFileAsync(string filePath)

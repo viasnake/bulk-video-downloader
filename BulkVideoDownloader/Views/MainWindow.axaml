@@ -23,13 +23,15 @@
     <StackPanel Grid.Row="0" Grid.Column="1" Spacing="8">
       <Button Content="ファイル読込" Click="OpenUrlFile" />
       <Button Content="リストに追加" Command="{Binding AddUrlsCommand}" />
+      <Button Content="選択削除" Command="{Binding RemoveSelectedCommand}" />
     </StackPanel>
 
     <DataGrid Grid.Row="1"
               Grid.Column="0"
               AutoGenerateColumns="False"
               IsReadOnly="True"
-              ItemsSource="{Binding Items}">
+              ItemsSource="{Binding Items}"
+              SelectedItem="{Binding SelectedItem}">
       <DataGrid.Columns>
         <DataGridTextColumn Header="URL" Binding="{Binding Url}" Width="*" />
         <DataGridTextColumn Header="状態" Binding="{Binding StatusText}" Width="100" />
