@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -34,6 +35,7 @@ public sealed class MainWindowViewModel : ObservableObject
         Items.CollectionChanged += OnItemsChanged;
         AddUrlsCommand = new RelayCommand(AddUrlsFromInput, () => !string.IsNullOrWhiteSpace(UrlInput));
         RemoveSelectedCommand = new RelayCommand(RemoveSelected, CanRemoveSelected);
+        ClearCompletedCommand = new RelayCommand(ClearCompleted, CanClearCompleted);
         StartCommand = new AsyncRelayCommand(StartAsync, CanStart);
         StopCommand = new RelayCommand(Stop, () => IsRunning);
         _logFlushTimer = new DispatcherTimer
@@ -49,6 +51,8 @@ public sealed class MainWindowViewModel : ObservableObject
     public RelayCommand AddUrlsCommand { get; }
 
     public RelayCommand RemoveSelectedCommand { get; }
+
+    public RelayCommand ClearCompletedCommand { get; }
 
     public AsyncRelayCommand StartCommand { get; }
 
@@ -113,10 +117,11 @@ public sealed class MainWindowViewModel : ObservableObject
         {
             if (SetProperty(ref _isRunning, value))
             {
-        StartCommand.RaiseCanExecuteChanged();
-        RemoveSelectedCommand.RaiseCanExecuteChanged();
-    }
-
+                StartCommand.RaiseCanExecuteChanged();
+                StopCommand.RaiseCanExecuteChanged();
+                RemoveSelectedCommand.RaiseCanExecuteChanged();
+                ClearCompletedCommand.RaiseCanExecuteChanged();
+            }
         }
     }
 
@@ -153,6 +158,7 @@ public sealed class MainWindowViewModel : ObservableObject
 
         AddUrlsCommand.RaiseCanExecuteChanged();
         StartCommand.RaiseCanExecuteChanged();
+        ClearCompletedCommand.RaiseCanExecuteChanged();
     }
 
     private void RemoveSelected()
@@ -170,6 +176,33 @@ public sealed class MainWindowViewModel : ObservableObject
     private bool CanRemoveSelected()
     {
         return !IsRunning && SelectedItem is not null;
+    }
+
+    private void ClearCompleted()
+    {
+        var completed = Items.Where(item => item.Status == DownloadStatus.Completed).ToList();
+        if (completed.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in completed)
+        {
+            Items.Remove(item);
+        }
+
+        if (SelectedItem is not null && !Items.Contains(SelectedItem))
+        {
+            SelectedItem = null;
+        }
+
+        StartCommand.RaiseCanExecuteChanged();
+        ClearCompletedCommand.RaiseCanExecuteChanged();
+    }
+
+    private bool CanClearCompleted()
+    {
+        return !IsRunning && Items.Any(item => item.Status == DownloadStatus.Completed);
     }
 
     public async Task AddUrlsFromFileAsync(string filePath)
@@ -287,11 +320,38 @@ public sealed class MainWindowViewModel : ObservableObject
 
     private bool CanStart()
     {
-        return !IsRunning && Items.Count > 0;
+        return !IsRunning && Items.Any(item => item.Status != DownloadStatus.Completed);
     }
 
     private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        if (e.NewItems is not null)
+        {
+            foreach (DownloadItemViewModel item in e.NewItems)
+            {
+                item.PropertyChanged += OnItemPropertyChanged;
+            }
+        }
+
+        if (e.OldItems is not null)
+        {
+            foreach (DownloadItemViewModel item in e.OldItems)
+            {
+                item.PropertyChanged -= OnItemPropertyChanged;
+            }
+        }
+
         StartCommand.RaiseCanExecuteChanged();
+        RemoveSelectedCommand.RaiseCanExecuteChanged();
+        ClearCompletedCommand.RaiseCanExecuteChanged();
+    }
+
+    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(DownloadItemViewModel.Status))
+        {
+            ClearCompletedCommand.RaiseCanExecuteChanged();
+            StartCommand.RaiseCanExecuteChanged();
+        }
     }
 }
