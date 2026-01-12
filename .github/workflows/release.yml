@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+
+    env:
+      PROJECT: BulkVideoDownloader/BulkVideoDownloader.csproj
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v3
+        with:
+          cache: true
+      - name: Publish
+        shell: bash
+        run: mise exec -- dotnet publish $PROJECT -c Release -r ${{ matrix.rid }} --self-contained false -o "artifacts/${{ matrix.rid }}"
+      - name: Pack
+        shell: bash
+        run: tar -czf "artifacts/BulkVideoDownloader-${{ matrix.rid }}.tar.gz" -C "artifacts/${{ matrix.rid }}" .
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/BulkVideoDownloader-${{ matrix.rid }}.tar.gz
