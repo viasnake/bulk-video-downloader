@@ -2,7 +2,7 @@
 
 ## 開発環境
 - Windows 10/11 推奨
-- .NET 8 SDK
+- .NET 10 SDK
 - mise
 
 ### セットアップ

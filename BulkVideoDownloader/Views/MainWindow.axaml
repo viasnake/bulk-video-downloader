@@ -81,7 +81,7 @@
         <TextBox Text="{Binding Username}" />
 
         <TextBlock Text="パスワード" />
-        <PasswordBox Password="{Binding Password}" PasswordChar="●" />
+        <TextBox Text="{Binding Password}" PasswordChar="●" />
 
         <TextBlock Text="追加オプション" />
         <TextBox Text="{Binding AdditionalOptions}" />

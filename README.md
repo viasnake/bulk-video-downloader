@@ -15,7 +15,7 @@ GUI は Avalonia UI で構築し、`yt-dlp` を利用してさまざまなプロ
 
 - Windows 10/11
 - `yt-dlp.exe` (ダウンロード開始時に不足していれば自動取得)
-- .NET 8 SDK (mise で管理)
+- .NET 10 SDK (mise で管理)
 
 ## Setup (mise)
 

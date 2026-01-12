@@ -26,6 +26,9 @@ jobs:
       - uses: jdx/mise-action@v3
         with:
           cache: true
+      - name: Install tools
+        shell: bash
+        run: mise install
       - name: Publish
         shell: bash
         run: mise exec -- dotnet publish $PROJECT -c Release -r ${{ matrix.rid }} --self-contained false -o "artifacts/${{ matrix.rid }}"
