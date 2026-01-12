@@ -269,14 +269,22 @@ public sealed class MainWindowViewModel : ObservableObject
             return;
         }
 
-        UiDispatcher.Post(() => IsRunning = true);
-        AppendLog("ダウンロードを開始しました。");
         _cancellationTokenSource = new CancellationTokenSource();
-
-        await SaveSettingsAsync();
+        UiDispatcher.Post(() => IsRunning = true);
 
         try
         {
+            AppendLog("yt-dlp を確認しています。");
+            var bootstrapper = new YtDlpBootstrapper();
+            if (!await bootstrapper.EnsureAsync(AppendLog, _cancellationTokenSource.Token).ConfigureAwait(false))
+            {
+                AppendLog("yt-dlp を取得できないため中断しました。");
+                return;
+            }
+
+            AppendLog("ダウンロードを開始しました。");
+            await SaveSettingsAsync();
+
             await _downloadQueue.RunAsync(
                 Items,
                 BuildSettings(),

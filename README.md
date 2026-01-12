@@ -14,7 +14,7 @@ GUI は Avalonia UI で構築し、`yt-dlp` を利用してさまざまなプロ
 ## Requirements
 
 - Windows 10/11
-- `yt-dlp.exe` (実行フォルダ同梱、または PATH に追加)
+- `yt-dlp.exe` (ダウンロード開始時に不足していれば自動取得)
 - .NET 8 SDK (mise で管理)
 
 ## Setup (mise)
