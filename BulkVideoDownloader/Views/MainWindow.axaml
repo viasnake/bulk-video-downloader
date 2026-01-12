@@ -45,9 +45,11 @@
           </StackPanel>
         </Grid>
         <DataGrid Grid.Row="1"
+                  x:Name="DownloadGrid"
                   Margin="0,8,0,0"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
+                  CanUserResizeColumns="True"
                   ItemsSource="{Binding Items}"
                   SelectedItem="{Binding SelectedItem}"
                   VerticalScrollBarVisibility="Auto">

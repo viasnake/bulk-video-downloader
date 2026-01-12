@@ -29,6 +29,7 @@ public sealed class MainWindowViewModel : ObservableObject
     private string _username = string.Empty;
     private string _password = string.Empty;
     private int _parallelism = 1;
+    private Dictionary<string, double> _downloadListColumnWidths = new();
     private string _logText = string.Empty;
     private bool _isRunning;
 
@@ -118,6 +119,13 @@ public sealed class MainWindowViewModel : ObservableObject
         }
     }
 
+    public IReadOnlyDictionary<string, double> DownloadListColumnWidths => _downloadListColumnWidths;
+
+    public void SetDownloadListColumnWidths(Dictionary<string, double> widths)
+    {
+        _downloadListColumnWidths = widths ?? new Dictionary<string, double>();
+    }
+
     public string LogText
     {
         get => _logText;
@@ -149,6 +157,7 @@ public sealed class MainWindowViewModel : ObservableObject
             Username = settings.Username;
             Password = settings.Password;
             Parallelism = settings.Parallelism;
+            _downloadListColumnWidths = settings.DownloadListColumnWidths ?? new Dictionary<string, double>();
         });
     }
 
@@ -340,7 +349,8 @@ public sealed class MainWindowViewModel : ObservableObject
             AdditionalOptions = AdditionalOptions ?? string.Empty,
             Username = Username ?? string.Empty,
             Password = Password ?? string.Empty,
-            Parallelism = Parallelism
+            Parallelism = Parallelism,
+            DownloadListColumnWidths = new Dictionary<string, double>(_downloadListColumnWidths)
         };
     }
 
