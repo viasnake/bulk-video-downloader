@@ -126,8 +126,7 @@ public sealed class DownloadService
 
     private static string ResolveYtDlpPath()
     {
-        var localPath = Path.Combine(AppContext.BaseDirectory, "yt-dlp.exe");
-        return File.Exists(localPath) ? localPath : "yt-dlp";
+        return YtDlpBootstrapper.ResolvePath();
     }
 
     private static bool TryParseProgress(string line, out double percent)

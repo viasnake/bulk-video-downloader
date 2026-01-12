@@ -17,4 +17,6 @@
 
 ## yt-dlp が見つからない
 
-- `yt-dlp.exe` をアプリの実行フォルダに置くか PATH に追加してください。
+- ダウンロード開始時に `yt-dlp.exe` を自動取得します。
+- 取得に失敗する場合はネットワーク接続と `%AppData%\BulkVideoDownloader\logs\app.log` を確認してください。
+- 手動で `yt-dlp.exe` を実行フォルダに置くか PATH に追加しても構いません。
