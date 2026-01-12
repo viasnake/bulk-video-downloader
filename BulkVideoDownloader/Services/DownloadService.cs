@@ -108,6 +108,18 @@ public sealed class DownloadService
             arguments.Add(settings.OutputDirectory);
         }
 
+        if (!string.IsNullOrWhiteSpace(settings.Username))
+        {
+            arguments.Add("-u");
+            arguments.Add(settings.Username);
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.Password))
+        {
+            arguments.Add("-p");
+            arguments.Add(settings.Password);
+        }
+
         if (!string.IsNullOrWhiteSpace(settings.AdditionalOptions))
         {
             arguments.AddRange(CommandLineSplitter.Split(settings.AdditionalOptions));

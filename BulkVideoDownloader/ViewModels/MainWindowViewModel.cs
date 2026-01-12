@@ -26,6 +26,8 @@ public sealed class MainWindowViewModel : ObservableObject
     private DownloadItemViewModel? _selectedItem;
     private string _outputDirectory = string.Empty;
     private string _additionalOptions = string.Empty;
+    private string _username = string.Empty;
+    private string _password = string.Empty;
     private int _parallelism = 1;
     private string _logText = string.Empty;
     private bool _isRunning;
@@ -94,6 +96,18 @@ public sealed class MainWindowViewModel : ObservableObject
         set => SetProperty(ref _additionalOptions, value);
     }
 
+    public string Username
+    {
+        get => _username;
+        set => SetProperty(ref _username, value);
+    }
+
+    public string Password
+    {
+        get => _password;
+        set => SetProperty(ref _password, value);
+    }
+
     public int Parallelism
     {
         get => _parallelism;
@@ -132,6 +146,8 @@ public sealed class MainWindowViewModel : ObservableObject
         {
             OutputDirectory = settings.OutputDirectory;
             AdditionalOptions = settings.AdditionalOptions;
+            Username = settings.Username;
+            Password = settings.Password;
             Parallelism = settings.Parallelism;
         });
     }
@@ -322,6 +338,8 @@ public sealed class MainWindowViewModel : ObservableObject
         {
             OutputDirectory = OutputDirectory ?? string.Empty,
             AdditionalOptions = AdditionalOptions ?? string.Empty,
+            Username = Username ?? string.Empty,
+            Password = Password ?? string.Empty,
             Parallelism = Parallelism
         };
     }

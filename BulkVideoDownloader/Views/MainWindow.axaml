@@ -77,6 +77,12 @@
           <Button Grid.Column="1" Content="参照" Margin="6,0,0,0" Click="BrowseOutputFolder" />
         </Grid>
 
+        <TextBlock Text="ユーザ名" />
+        <TextBox Text="{Binding Username}" />
+
+        <TextBlock Text="パスワード" />
+        <PasswordBox Password="{Binding Password}" PasswordChar="●" />
+
         <TextBlock Text="追加オプション" />
         <TextBox Text="{Binding AdditionalOptions}" />
 
