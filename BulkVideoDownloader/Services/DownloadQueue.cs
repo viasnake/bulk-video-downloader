@@ -22,7 +22,8 @@ public sealed class DownloadQueue
         using var semaphore = new SemaphoreSlim(parallelism, parallelism);
         var tasks = new List<Task>();
 
-        foreach (var item in items)
+        var targets = items.Where(item => item.Status != DownloadStatus.Completed).ToList();
+        foreach (var item in targets)
         {
             if (cancellationToken.IsCancellationRequested)
             {
